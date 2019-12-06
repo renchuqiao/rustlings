@@ -1,6 +1,8 @@
 // structs1.rs
 // Address all the TODOs to make the tests pass!
 
+// I AM NOT DONE
+
 struct ColorClassicStruct {
     // TODO: Something goes here
 }
@@ -26,7 +28,6 @@ mod tests {
     #[test]
     fn tuple_structs() {
         // TODO: Instantiate a tuple struct!
-        // For more fun, use the field initialization shorthand.
         // let green =
 
         assert_eq!(green.0, "green");

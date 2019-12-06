@@ -1,12 +1,13 @@
 // if1.rs
 
+// I AM NOT DONE
+
 pub fn bigger(a: i32, b: i32) -> i32 {
     // Complete this function to return the bigger number!
     // Do not use:
-    // - return
     // - another function call
     // - additional variables
-    // Scroll down for hints.
+    // Execute `rustlings hint if1` for hints
 }
 
 // Don't mind this for now :)
@@ -24,36 +25,3 @@ mod tests {
         assert_eq!(42, bigger(32, 42));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// It's possible to do this in one line if you would like!
-// Some similar examples from other languages:
-// - In C(++) this would be: `a > b ? a : b`
-// - In Python this would be:  `a if a > b else b`
-// Remember in Rust that:
-// - the `if` condition does not need to be surrounded by parentheses
-// - `if`/`else` conditionals are expressions
-// - Each condition is followed by a `{}` block.

@@ -1,3 +1,79 @@
+<a name="2.1.0"></a>
+## 2.1.0 (2019-11-27)
+
+#### Bug Fixes
+
+* add line numbers in several exercises and hints ([b565c4d3](https://github.com/rust-lang/rustlings/commit/b565c4d3e74e8e110bef201a082fa1302722a7c3))
+* **arc1:**  Fix some words in the comment ([c42c3b21](https://github.com/rust-lang/rustlings/commit/c42c3b2101df9164c8cd7bb344def921e5ba3e61))
+* **enums:**  Add link to chapter on pattern syntax (#242) ([615ce327](https://github.com/rust-lang/rustlings/commit/615ce3279800c56d89f19d218ccb7ef576624feb))
+* **primitive_types4:**
+  *  update outdated hint ([4c5189df](https://github.com/rust-lang/rustlings/commit/4c5189df2bdd9a231f6b2611919ba5aa14da0d3f))
+  *  update outdated comment ([ded2c034](https://github.com/rust-lang/rustlings/commit/ded2c034ba93fa1e3c2c2ea16b83abc1a57265e8))
+* **strings2:**  update line number in hint ([a09f684f](https://github.com/rust-lang/rustlings/commit/a09f684f05c58d239a6fc59ec5f81c2533e8b820))
+* **variables1:**  Correct wrong word in comment ([fda5a470](https://github.com/rust-lang/rustlings/commit/fda5a47069e0954f16a04e8e50945e03becb71a5))
+
+#### Features
+
+* **watch:**  show hint while watching ([8143d57b](https://github.com/rust-lang/rustlings/commit/8143d57b4e88c51341dd4a18a14c536042cc009c))
+
+<a name="2.0.0"></a>
+## 2.0.0 (2019-11-12)
+
+#### Bug Fixes
+
+* **default:**  Clarify the installation procedure ([c371b853](https://github.com/rust-lang/rustlings/commit/c371b853afa08947ddeebec0edd074b171eeaae0))
+* **info:**  Fix trailing newlines for hints ([795b6e34](https://github.com/rust-lang/rustlings/commit/795b6e348094a898e9227a14f6232f7bb94c8d31))
+* **run:**  make `run` never prompt ([4b265465](https://github.com/rust-lang/rustlings/commit/4b26546589f7d2b50455429482cf1f386ceae8b3))
+
+#### Breaking Changes
+
+*   Refactor hint system ([9bdb0a12](https://github.com/rust-lang/rustlings/commit/9bdb0a12e45a8e9f9f6a4bd4a9c172c5376c7f60))
+*   improve `watch` execution mode ([2cdd6129](https://github.com/rust-lang/rustlings/commit/2cdd61294f0d9a53775ee24ad76435bec8a21e60))
+*   Index exercises by name ([627cdc07](https://github.com/rust-lang/rustlings/commit/627cdc07d07dfe6a740e885e0ddf6900e7ec336b))
+* **run:**  makes `run` never prompt ([4b265465](https://github.com/rust-lang/rustlings/commit/4b26546589f7d2b50455429482cf1f386ceae8b3))
+
+#### Features
+
+* **cli:**  check for rustc before doing anything ([36a033b8](https://github.com/rust-lang/rustlings/commit/36a033b87a6549c1e5639c908bf7381c84f4f425))
+* **hint:**  Add test for hint ([ce9fa6eb](https://github.com/rust-lang/rustlings/commit/ce9fa6ebbfdc3e7585d488d9409797285708316f))
+
+<a name="1.5.1"></a>
+### 1.5.1 (2019-11-11)
+
+#### Bug Fixes
+
+* **errors3:**  Update hint ([dcfb427b](https://github.com/rust-lang/rustlings/commit/dcfb427b09585f0193f0a294443fdf99f11c64cb), closes [#185](https://github.com/rust-lang/rustlings/issues/185))
+* **if1:**  Remove `return` reference ([ad03d180](https://github.com/rust-lang/rustlings/commit/ad03d180c9311c0093e56a3531eec1a9a70cdb45))
+* **strings:**  Move Strings before Structs ([6dcecb38](https://github.com/rust-lang/rustlings/commit/6dcecb38a4435593beb87c8e12d6314143631482), closes [#204](https://github.com/rust-lang/rustlings/issues/204))
+* **structs1:**  Remove misleading comment ([f72e5a8f](https://github.com/rust-lang/rustlings/commit/f72e5a8f05568dde04eaeac10b9a69872f21cb37))
+* **threads:**  Move Threads behind SLT ([fbe91a67](https://github.com/rust-lang/rustlings/commit/fbe91a67a482bfe64cbcdd58d06ba830a0f39da3), closes [#205](https://github.com/rust-lang/rustlings/issues/205))
+* **watch:** clear screen before each `verify()`  ([3aff590](https://github.com/rust-lang/rustlings/commit/3aff59085586c24196a547c2693adbdcf4432648))
+
+<a name="1.5.0"></a>
+## 1.5.0 (2019-11-09)
+
+#### Bug Fixes
+
+* **test1:** Rewrite logic ([79a56942](https://github.com/rust-lang/rustlings/commit/79a569422c8309cfc9e4aed25bf4ab3b3859996b))
+* **installation:**  Fix rustlings installation check ([7a252c47](https://github.com/rust-lang/rustlings/commit/7a252c475551486efb52f949b8af55803b700bc6))
+* **iterators:**  Rename iterator3.rs ([433d2115](https://github.com/rust-lang/rustlings/commit/433d2115bc1c04b6d34a335a18c9a8f3e2672bc6))
+* **iterators2:**  Remove syntax resulting in misleading error message ([4cde8664](https://github.com/rust-lang/rustlings/commit/4cde86643e12db162a66e62f23b78962986046ac))
+* **option1:**
+  *  Fix arguments passed to assert! macro (#222) ([4c2cf6da](https://github.com/rust-lang/rustlings/commit/4c2cf6da755efe02725e05ecc3a303304c10a6da))
+  *  Fix arguments passed to assert! macro ([ead4f7af](https://github.com/rust-lang/rustlings/commit/ead4f7af9e10e53418efdde5c359159347282afd))
+  *  Add test for prematurely passing exercise ([a750e4a1](https://github.com/rust-lang/rustlings/commit/a750e4a1a3006227292bb17d57d78ce84da6bfc6))
+* **primitive_types4:**  Fail on a slice covering the wrong area ([5b1e673c](https://github.com/rust-lang/rustlings/commit/5b1e673cec1658afc4ebbbc800213847804facf5))
+* **readme:**  http to https ([70946b85](https://github.com/rust-lang/rustlings/commit/70946b85e536e80e70ed9505cb650ca0a3a1fbb5))
+* **test1:**
+  *  Swap assertion parameter order ([4086d463](https://github.com/rust-lang/rustlings/commit/4086d463a981e81d97781851d17db2ced290f446))
+  *  renamed function name to snake case closes #180 ([89d5186c](https://github.com/rust-lang/rustlings/commit/89d5186c0dae8135ecabf90ee8bb35949bc2d29b))
+
+#### Features
+
+*   Add enums exercises ([dc150321](https://github.com/rust-lang/rustlings/commit/dc15032112fc485226a573a18139e5ce928b1755))
+*   Added exercise for struct update syntax ([1c4c8764](https://github.com/rust-lang/rustlings/commit/1c4c8764ed118740cd4cee73272ddc6cceb9d959))
+* **iterators2:**  adds iterators2 exercise including config ([9288fccf](https://github.com/rust-lang/rustlings/commit/9288fccf07a2c5043b76d0fd6491e4cf72d76031))
+
 <a name="1.4.1"></a>
 ### 1.4.1 (2019-08-13)
 

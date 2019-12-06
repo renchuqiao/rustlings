@@ -1,5 +1,7 @@
 // functions2.rs
-// Make me compile! Scroll down for hints :)
+// Make me compile! Execute `rustlings hint functions2` for hints :)
+
+// I AM NOT DONE
 
 fn main() {
     call_me(3);
@@ -10,33 +12,3 @@ fn call_me(num) {
         println!("Ring! Call number {}", i + 1);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Rust requires that all parts of a function's signature have type annotations,
-// but `call_me` is missing the type annotation of `num`.

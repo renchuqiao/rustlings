@@ -6,8 +6,12 @@ use notify::DebouncedEvent;
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use std::ffi::OsStr;
 use std::fs;
+use std::io;
 use std::path::Path;
+use std::process::{Command, Stdio};
 use std::sync::mpsc::channel;
+use std::sync::{Arc, Mutex};
+use std::thread;
 use std::time::Duration;
 
 mod exercise;
@@ -25,8 +29,13 @@ fn main() {
             SubCommand::with_name("run")
                 .alias("r")
                 .about("Runs/Tests a single exercise")
-                .arg(Arg::with_name("file").required(true).index(1))
-                .arg(Arg::with_name("test").short("t").long("test").help("Run the file as a test")),
+                .arg(Arg::with_name("name").required(true).index(1)),
+        )
+        .subcommand(
+            SubCommand::with_name("hint")
+                .alias("h")
+                .about("Returns a hint for the current exercise")
+                .arg(Arg::with_name("name").required(true).index(1)),
         )
         .get_matches();
 
@@ -51,28 +60,41 @@ fn main() {
         std::process::exit(1);
     }
 
+    if !rustc_exists() {
+        println!("We cannot find `rustc`.");
+        println!("Try running `rustc --version` to diagnose your problem.");
+        println!("For instructions on how to install Rust, check the README.");
+        std::process::exit(1);
+    }
+
     let toml_str = &fs::read_to_string("info.toml").unwrap();
     let exercises = toml::from_str::<ExerciseList>(toml_str).unwrap().exercises;
 
     if let Some(ref matches) = matches.subcommand_matches("run") {
-        let filename = matches.value_of("file").unwrap_or_else(|| {
-            println!("Please supply a file name!");
-            std::process::exit(1);
-        });
+        let name = matches.value_of("name").unwrap();
 
-        let matching_exercise = |e: &&Exercise| {
-            Path::new(filename)
-                .canonicalize()
-                .map(|p| p.ends_with(&e.path))
-                .unwrap_or(false)
-        };
+        let matching_exercise = |e: &&Exercise| name == e.name;
 
         let exercise = exercises.iter().find(matching_exercise).unwrap_or_else(|| {
-            println!("No exercise found for your file name!");
+            println!("No exercise found for your given name!");
             std::process::exit(1)
         });
 
         run(&exercise).unwrap_or_else(|_| std::process::exit(1));
+    }
+
+    if let Some(ref matches) = matches.subcommand_matches("hint") {
+        let name = matches.value_of("name").unwrap();
+
+        let exercise = exercises
+            .iter()
+            .find(|e| name == e.name)
+            .unwrap_or_else(|| {
+                println!("No exercise found for your given name!");
+                std::process::exit(1)
+            });
+
+        println!("{}", exercise.hint);
     }
 
     if matches.subcommand_matches("verify").is_some() {
@@ -89,25 +111,57 @@ fn main() {
     }
 }
 
+fn spawn_watch_shell(failed_exercise_hint: &Arc<Mutex<Option<String>>>) {
+    let failed_exercise_hint = Arc::clone(failed_exercise_hint);
+    println!("Type 'hint' to get help");
+    thread::spawn(move || loop {
+        let mut input = String::new();
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                if input.trim().eq("hint") {
+                    if let Some(hint) = &*failed_exercise_hint.lock().unwrap() {
+                        println!("{}", hint);
+                    }
+                } else {
+                    println!("unknown command: {}", input);
+                }
+            }
+            Err(error) => println!("error reading command: {}", error),
+        }
+    });
+}
+
 fn watch(exercises: &[Exercise]) -> notify::Result<()> {
+    /* Clears the terminal with an ANSI escape code.
+    Works in UNIX and newer Windows terminals. */
+    fn clear_screen() {
+        println!("\x1Bc");
+    }
+
     let (tx, rx) = channel();
 
     let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_secs(2))?;
     watcher.watch(Path::new("./exercises"), RecursiveMode::Recursive)?;
 
-    let _ignored = verify(exercises.iter());
+    clear_screen();
+    let verify_result = verify(exercises.iter());
 
+    let to_owned_hint = |t: &Exercise| t.hint.to_owned();
+    let failed_exercise_hint = Arc::new(Mutex::new(verify_result.map_err(to_owned_hint).err()));
+    spawn_watch_shell(&failed_exercise_hint);
     loop {
         match rx.recv() {
             Ok(event) => match event {
                 DebouncedEvent::Create(b) | DebouncedEvent::Chmod(b) | DebouncedEvent::Write(b) => {
                     if b.extension() == Some(OsStr::new("rs")) && b.exists() {
-                        println!("----------**********----------\n");
                         let filepath = b.as_path().canonicalize().unwrap();
-                        let exercise = exercises
+                        let pending_exercises = exercises
                             .iter()
                             .skip_while(|e| !filepath.ends_with(&e.path));
-                        let _ignored = verify(exercise);
+                        clear_screen();
+                        let verify_result = verify(pending_exercises);
+                        let mut failed_exercise_hint = failed_exercise_hint.lock().unwrap();
+                        *failed_exercise_hint = verify_result.map_err(to_owned_hint).err();
                     }
                 }
                 _ => {}
@@ -115,4 +169,14 @@ fn watch(exercises: &[Exercise]) -> notify::Result<()> {
             Err(e) => println!("watch error: {:?}", e),
         }
     }
+}
+
+fn rustc_exists() -> bool {
+    Command::new("rustc")
+        .args(&["--version"])
+        .stdout(Stdio::null())
+        .spawn()
+        .and_then(|mut child| child.wait())
+        .map(|status| status.success())
+        .unwrap_or(false)
 }

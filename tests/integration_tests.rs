@@ -1,4 +1,8 @@
 use assert_cmd::prelude::*;
+use glob::glob;
+use predicates::boolean::PredicateBooleanExt;
+use std::fs::File;
+use std::io::Read;
 use std::process::Command;
 
 #[test]
@@ -40,7 +44,7 @@ fn verify_all_failure() {
 fn run_single_compile_success() {
     Command::cargo_bin("rustlings")
         .unwrap()
-        .args(&["r", "compSuccess.rs"])
+        .args(&["r", "compSuccess"])
         .current_dir("tests/fixture/success/")
         .assert()
         .success();
@@ -50,7 +54,7 @@ fn run_single_compile_success() {
 fn run_single_compile_failure() {
     Command::cargo_bin("rustlings")
         .unwrap()
-        .args(&["r", "compFailure.rs"])
+        .args(&["r", "compFailure"])
         .current_dir("tests/fixture/failure/")
         .assert()
         .code(1);
@@ -60,7 +64,7 @@ fn run_single_compile_failure() {
 fn run_single_test_success() {
     Command::cargo_bin("rustlings")
         .unwrap()
-        .args(&["r", "testSuccess.rs"])
+        .args(&["r", "testSuccess"])
         .current_dir("tests/fixture/success/")
         .assert()
         .success();
@@ -70,7 +74,7 @@ fn run_single_test_success() {
 fn run_single_test_failure() {
     Command::cargo_bin("rustlings")
         .unwrap()
-        .args(&["r", "testFailure.rs"])
+        .args(&["r", "testFailure"])
         .current_dir("tests/fixture/failure/")
         .assert()
         .code(1);
@@ -104,4 +108,54 @@ fn run_single_test_no_exercise() {
         .current_dir("tests/fixture/failure")
         .assert()
         .code(1);
+}
+
+#[test]
+fn get_hint_for_single_test() {
+    Command::cargo_bin("rustlings")
+        .unwrap()
+        .args(&["h", "testFailure"])
+        .current_dir("tests/fixture/failure")
+        .assert()
+        .code(0)
+        .stdout("Hello!\n");
+}
+
+#[test]
+fn all_exercises_require_confirmation() {
+    for exercise in glob("exercises/**/*.rs").unwrap() {
+        let path = exercise.unwrap();
+        let source = {
+            let mut file = File::open(&path).unwrap();
+            let mut s = String::new();
+            file.read_to_string(&mut s).unwrap();
+            s
+        };
+        source.matches("// I AM NOT DONE").next().expect(&format!(
+            "There should be an `I AM NOT DONE` annotation in {:?}",
+            path
+        ));
+    }
+}
+
+#[test]
+fn run_compile_exercise_does_not_prompt() {
+    Command::cargo_bin("rustlings")
+        .unwrap()
+        .args(&["r", "pending_exercise"])
+        .current_dir("tests/fixture/state")
+        .assert()
+        .code(0)
+        .stdout(predicates::str::contains("I AM NOT DONE").not());
+}
+
+#[test]
+fn run_test_exercise_does_not_prompt() {
+    Command::cargo_bin("rustlings")
+        .unwrap()
+        .args(&["r", "pending_test_exercise"])
+        .current_dir("tests/fixture/state")
+        .assert()
+        .code(0)
+        .stdout(predicates::str::contains("I AM NOT DONE").not());
 }
